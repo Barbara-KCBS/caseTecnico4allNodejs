@@ -1,0 +1,100 @@
+{
+    "Comida Asiatica": {
+       "avgPrice": 24.16,
+       "Japonesa": {
+          "Sushi": { 
+             "price": "70.00"
+          },
+          "Temaki": { 
+             "price": "20.90"
+          }
+       },
+       "Chinesa": {
+          "Rolinho Primavera": { 
+             "price": "15.90"
+          }
+       },
+       "Oriental": {
+          "Sushi": { 
+             "price": "70.00"
+          },
+          "Temaki": { 
+             "price": "20.90"
+          },
+          "Rolinho Primavera": { 
+             "price": "15.90"
+          }
+       },
+       "Bebidas": {
+          "Guaraná": { 
+             "price": "9.00"
+          },
+          "Água": { 
+             "price": "5.00"
+          }
+       },
+       "Refeições": {
+          "Sushi": { 
+             "price": "70.00"
+          }
+       }
+    },
+    "Fast Lanches": {
+       "avgPrice": 20.13,
+       "Lanche": {
+          "Xis Frango": { 
+             "price": "30.00"
+          },
+          "Xis Carne": { 
+             "price": "31.00"
+          },
+          "Xis Coração": { 
+             "price": "36.50"
+          },
+          "Hamburguer": { 
+             "price": "28.50"
+          },
+          "Batata frita": { 
+             "price": "15.00"
+          }
+       },
+       "Fast food": {
+          "Hamburguer": { 
+             "price": "28.50"
+          }
+       },
+       "Bebidas": {
+          "Guaraná": { 
+             "price": "9.00"
+          },
+          "Suco": { 
+             "price": "6.00"
+          },
+          "Água": { 
+             "price": "5.00"
+          }
+       }
+    },
+    "Restaurante": {
+       "avgPrice": 15.98,
+       "Bebidas": {
+          "Guaraná": { 
+             "price": "9.00"
+          },
+          "Suco": { 
+             "price": "6.00"
+          },
+          "Água": { 
+             "price": "5.00"
+          }
+       },
+       "Refeições": {
+          "Alaminuta": { 
+             "price": "28.00"
+          },
+          "Churrasco": { 
+             "price": "31.90"
+          }
+       }
+    }
+}
