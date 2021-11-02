@@ -4,11 +4,11 @@ const {establishments, products, categories} = require("./data.json")
 let estabelecimento = establishments;
 let produtos = products;
 let categoria = categories;
-let construirJson = "";  
+let construindoJson = "";  
 let listaDeStrings = [];
 let mediasDosEstabelecimentos = [];
 
-// Percorre a lista de estabelecimentos
+// Percorre a lista de estabelecimentos do arquivo data.json
 estabelecimento.forEach(function(nome, indiceEstabelecimento){
     let construindoString = "";
     let totalDeProdutosDoEstabelecimento = estabelecimento[indiceEstabelecimento].productsId.length;
@@ -20,12 +20,12 @@ estabelecimento.forEach(function(nome, indiceEstabelecimento){
     produtosDoEstabelecimento.forEach(function(nome, indiceDoProdutoDoEstabelecimento){
         let idDoProdutoDoEstabelecimento = produtosDoEstabelecimento[indiceDoProdutoDoEstabelecimento];
 
-        // Percorre todos os produtos do arquivo json
+        // Percorre todos os produtos do arquivo data.json
         produtos.forEach(function(nome, indiceDoProduto){
             let idDoProduto = produtos[indiceDoProduto].id;
             let precoDoProduto = Number(produtos[indiceDoProduto].price)
 
-            // Entra nesta condição o produto que estiver disponivel no estabelecimento, soma e atribui os valores na variável com o total da soma dos produtos
+            // Entra nesta condição o produto que estiver disponivel no estabelecimento, soma e atribui os valores na variável com a soma dos valores dos produtos
             if(idDoProdutoDoEstabelecimento === idDoProduto){
                 somaDosPrecos += precoDoProduto;
             }
@@ -33,20 +33,20 @@ estabelecimento.forEach(function(nome, indiceEstabelecimento){
 
     })
 
-    // Calcular média da soma dos preços de todos os produtos
+    // Calcula média da soma dos preços de todos os produtos do estabecimento atual
     let avgPrice = ((somaDosPrecos / totalDeProdutosDoEstabelecimento)/100).toFixed(2);
     mediasDosEstabelecimentos.push(avgPrice);
-    // Atribui e concatena na variavel que contém a construção da string com todos os dados para gerar o arquivo json
-    construindoString += `"${nomeDoEstabelecimento}": {"avgPrice": "${avgPrice}",`;
+    // Atribui e concatena na variavel que contém a construção da string com todos os dados para gerar um novo arquivo json
+    construindoString += `"${nomeDoEstabelecimento}":{"avgPrice": "${avgPrice}",`;
 
-    // Percorre todas as categorias do arquivo json
+    // Percorre todas as categorias do arquivo data.json
     categoria.forEach(function(nome, indiceDacategoria){
         let idDacategoria = categoria[indiceDacategoria].id;
         let nomeDaCategoria = categoria[indiceDacategoria].name;
-        let categoriaComProduto = `"${nomeDaCategoria}": {`;
+        let produtoMaisPreco = `"${nomeDaCategoria}":{`;
         let localizouProdutoNoEstabelecimento = false;
         
-        // Percorre todos os produtos do arquivo json
+        // Percorre todos os produtos do arquivo data.json
         produtos.forEach(function(nome, indiceDeProdutos){
 
             let idDoProduto = produtos[indiceDeProdutos].id; 
@@ -67,7 +67,7 @@ estabelecimento.forEach(function(nome, indiceEstabelecimento){
                         // Entra nesta condição quando encontrar a categoria que o produto pertence
                         if(idDaCategoriaDoProdutoDoEstabelecimento === idDacategoria){
                             localizouProdutoNoEstabelecimento = true;                                                       
-                            categoriaComProduto += `"${nomeDoProduto}": { "price": "${precoDoProduto}"},` 
+                            produtoMaisPreco += `"${nomeDoProduto}":{"price": "${precoDoProduto}"},` 
                                                                
                         }
                     })
@@ -76,8 +76,8 @@ estabelecimento.forEach(function(nome, indiceEstabelecimento){
         })
 
         if(localizouProdutoNoEstabelecimento === true){                                             
-            categoriaComProduto = categoriaComProduto.substring(0, categoriaComProduto.length - 1);
-            construindoString += `${categoriaComProduto}},`;  
+            produtoMaisPreco = produtoMaisPreco.substring(0, produtoMaisPreco.length - 1);
+            construindoString += `${produtoMaisPreco}},`;  
         }
 
         if(indiceDacategoria === categoria.length - 1){
@@ -106,20 +106,21 @@ mediasDosEstabelecimentos.forEach(function(nome, indiceDaMedia){
 
     listaDeStrings.forEach(function(nome, indiceDaLista){
         if(listaDeStrings[indiceDaLista].media === mediaAtual){
-            construirJson += listaDeStrings[indiceDaLista].estabelecimentoString;
+            construindoJson += listaDeStrings[indiceDaLista].estabelecimentoString;
         }
     })
 })
 
-construirJson = construirJson.substring(0, construirJson.length - 1); 
 
 // construção final dos dados para gerar o arquivo json
-let jsonString = `{${construirJson}}`;
-jsonString = JSON.parse(jsonString);
-jsonString = JSON.stringify(jsonString, null, 3);
+
+construindoJson = construindoJson.substring(0, construindoJson.length - 1); 
+construindoJson= `{${construindoJson}}`;
+construindoJson = JSON.parse(construindoJson);
+construindoJson= JSON.stringify(construindoJson, null, 3);
 
 // Metódo do node.js que gera o arquivo json
-fs.writeFile('caseTecnico.json', jsonString, (err) => {
+fs.writeFile('caseTecnico.json', construindoJson, (err) => {
     if(err) throw err;
     console.log("arquivo criado")
 });
