@@ -1,120 +1,80 @@
-// importa o módulo local File system, para manipular os dados do arquivo data.json
 const fs = require('fs');
-const {establishments, products, categories} = require("./data.json")
+const {establishments, products, categories} = require('./data.json');
 
-const estabelecimento = establishments;
-const produtos = products;
-const categoria = categories;
-var construindoJson = "";  
-var listaDeStringsDosEstabelecimentos = [];
-var mediasDosEstabelecimentos = [];
+let objPrincipal = {};
+let listaDeObjetos = [];
+let medias = [];
 
-// Percorre a lista de estabelecimentos
-estabelecimento.forEach(function(nome, indiceEstabelecimento){
-    let construcaoDaString = "";
-    let totalDeProdutosDoEstabelecimento = estabelecimento[indiceEstabelecimento].productsId.length;
-    let produtosComPrecos = [];
-    let somaDosPrecos = 0;           
-    let nomeDoEstabelecimento = estabelecimento[indiceEstabelecimento].name;
-    let produtosDoEstabelecimento = estabelecimento[indiceEstabelecimento].productsId;
-   
-    // Percorre todas as categorias do arquivo data.json
-    categoria.forEach(function(nome, indiceDacategoria){
-        let idDacategoria = categoria[indiceDacategoria].id;
-        let nomeDaCategoria = categoria[indiceDacategoria].name;
-        let categoriaComProduto = `"${nomeDaCategoria}":{`;
-        let localizouProdutoNoEstabelecimento = false;
-        
-        // Percorre todos os produtos do arquivo data.json
-        produtos.forEach(function(nome, indiceDeProdutos){
-
-            let idDoProduto = produtos[indiceDeProdutos].id; 
-            let categoriaDoProduto = produtos[indiceDeProdutos].categoriesId;
-            let nomeDoProduto = produtos[indiceDeProdutos].name;
-            let precoDoProduto = Number(produtos[indiceDeProdutos].price);
-
-            // Percorre todos os produtos disponiveis no estabelecimento
-            produtosDoEstabelecimento.forEach(function(nome, indiceDoProdutoDoEstabelecimento){
-                let idDoProdutoDoEstabelecimento = produtosDoEstabelecimento[indiceDoProdutoDoEstabelecimento];
+establishments.forEach(function(establishment, i){
+    let objetoEstab = {};
+    objetoEstab[establishment.name] = {}
+    let categoriasDoEstabelecimento = [];
+    let produtoCategoriaEPreco = [];
+    let produtosEPrecos = [];
+    let somaDosPrecos = 0;
+    categories.forEach(function(category, i){
+        products.forEach(function(product, i){
+            establishment.productsId.forEach(function(prodEstab, i){ 
                 
-                if(idDoProdutoDoEstabelecimento === idDoProduto){                       
-                   
-                    // Percorre todas as categorias que o produto pertence
-                    categoriaDoProduto.forEach(function(nome, indiceDaCategoriaDeProdutos){
-                        let idDaCategoriaDoProdutoDoEstabelecimento = categoriaDoProduto[indiceDaCategoriaDeProdutos];
-                        
-                        // Entra nesta condição quando encontrar a categoria que o produto pertence
-                        if(idDaCategoriaDoProdutoDoEstabelecimento === idDacategoria){
-                            produtosComPrecos.push({ produto: nomeDoProduto, preco: precoDoProduto});
-                            localizouProdutoNoEstabelecimento = true;                                                       
-                            categoriaComProduto += `"${nomeDoProduto}":{"price": "${(precoDoProduto/100).toFixed(2)}"},` 
-                                                               
-                        }
-                    })
-                }                      
-            })      
-        })
-        
+                if(prodEstab === product.id){                
+                    product.categoriesId.forEach(function(prodCateg, i){
 
-        if(localizouProdutoNoEstabelecimento === true){                                             
-            categoriaComProduto = categoriaComProduto.substring(0, categoriaComProduto.length - 1);
-            construcaoDaString += `${categoriaComProduto}},`;  
-        }
-
-        if(indiceDacategoria === categoria.length - 1){
-            construcaoDaString = construcaoDaString.substring(0, construcaoDaString.length - 1);
-            construcaoDaString += "},"
-        }
-       
-        
+                        if(prodCateg === category.id){
+                            produtoCategoriaEPreco.push({ produto: product.name, categoria: category.name, preco: product.price});
+                            produtosEPrecos.push({ produto: product.name, preco: Number(product.price)})
+                            categoriasDoEstabelecimento.push(category.name);                                                
+                        }                       
+                    })   
+                }                   
+           })    
+        })     
     })
-
-    // Filtra produtos repetidos e exclui da lista de produtos com preços
-    produtosComPrecos = produtosComPrecos.filter(function (a) {
+    categoriasDoEstabelecimento = [...new Set(categoriasDoEstabelecimento)] 
+     
+    produtosEPrecos = produtosEPrecos.filter(function (a) {
         return !this[JSON.stringify(a)] && (this[JSON.stringify(a)] = true);
     }, Object.create(null))
     
-    // Soma todos os preços dos produtos do estabelecimento e calcula sua média
-    produtosComPrecos.forEach(function(nome, i){
-        somaDosPrecos += produtosComPrecos[i].preco;
+    produtosEPrecos.forEach(function(prodPreco, i){
+        somaDosPrecos += prodPreco.preco;
     })
 
-    let avgPrice = ((somaDosPrecos / totalDeProdutosDoEstabelecimento)/100).toFixed(2);
-    mediasDosEstabelecimentos.push(avgPrice);
+    let avgPrice = ((somaDosPrecos / establishment.productsId.length)/100).toFixed(2);
+    objetoEstab[establishment.name]["avgPrice"] = avgPrice
+    medias.push(Number(avgPrice));
 
-    // conclusão da string com os dados de determinado estabelecimento
-    construcaoDaString =  `"${nomeDoEstabelecimento}":{"avgPrice":"${avgPrice}", ${construcaoDaString}`;
-    let stringEMediaDosEstabelecimentos = { estabelecimentoString: construcaoDaString, media: avgPrice }
-    listaDeStringsDosEstabelecimentos.push(stringEMediaDosEstabelecimentos);
-})
+    categoriasDoEstabelecimento.forEach(function(categEstab, i){
+        objetoEstab[establishment.name][categEstab] = {}
 
+        produtoCategoriaEPreco.forEach(function(prodEstab, i){
+           if(prodEstab.categoria === categEstab){
+             objetoEstab[establishment.name][categEstab][prodEstab.produto] = {}
+             objetoEstab[establishment.name][categEstab][prodEstab.produto]["price"] = (prodEstab.preco/100).toFixed(2);
+           }
+        })
+    })
 
+    listaDeObjetos.push({objeto: objetoEstab, media: Number(avgPrice)});
 
-// Ordena, de forma decrescente, o array com a média dos valores de todos os produtos de um estabelecimento
+})    
+
 function sortfunction(a, b){
-     return (a - b) 
+    return (a - b) 
 }
-mediasDosEstabelecimentos.sort(sortfunction);
-mediasDosEstabelecimentos.reverse();
+medias.sort(sortfunction);
+medias.reverse();
 
-//Compara as médias dos arrays com as médias dos estabelecimentos e faz a construção da string em ordem descrescente 
-mediasDosEstabelecimentos.forEach(function(nome, indiceDaMedia){
-    let mediaAtual = mediasDosEstabelecimentos[indiceDaMedia];
-
-    listaDeStringsDosEstabelecimentos.forEach(function(nome, indiceDaLista){
-        if(listaDeStringsDosEstabelecimentos[indiceDaLista].media === mediaAtual){
-            construindoJson += listaDeStringsDosEstabelecimentos[indiceDaLista].estabelecimentoString;
+medias.forEach(function(mediaEstab, i){
+    listaDeObjetos.forEach(function(estabObj, i){
+        if(mediaEstab === estabObj.media){
+            Object.assign(objPrincipal, estabObj.objeto);
         }
     })
 })
 
-construindoJson = construindoJson.substring(0, construindoJson.length - 1); 
-construindoJson = `{${construindoJson}}`;
-construindoJson = JSON.parse(construindoJson);
-construindoJson = JSON.stringify(construindoJson, null, 3);
+var dadoDeSaidaJson = JSON.stringify(objPrincipal, null, 3)
 
-// Metódo do node.js que gera o arquivo json
-fs.writeFile('caseTecnico.json', construindoJson, (err) => {
+fs.writeFile('caseTecnico.json', dadoDeSaidaJson, (err) => {
     if(err) throw err;
     console.log("arquivo criado")
 });
