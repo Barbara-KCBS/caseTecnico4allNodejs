@@ -1,80 +1,54 @@
-const fs = require('fs');
-const {establishments, products, categories} = require('./data.json');
+const fs = require("fs");
+const {establishments, products, categories} = require("./data.json");
 
-let objPrincipal = {};
-let listaDeObjetos = [];
-let medias = [];
+var outPutData = {};
+var avgs = [];
+var establishmentsObjects = [];
 
-establishments.forEach(function(establishment, i){
-    let objetoEstab = {};
-    objetoEstab[establishment.name] = {}
-    let categoriasDoEstabelecimento = [];
-    let produtoCategoriaEPreco = [];
-    let produtosEPrecos = [];
-    let somaDosPrecos = 0;
-    categories.forEach(function(category, i){
-        products.forEach(function(product, i){
-            establishment.productsId.forEach(function(prodEstab, i){ 
-                
-                if(prodEstab === product.id){                
-                    product.categoriesId.forEach(function(prodCateg, i){
+establishments.forEach( establishment => {
+    let establishmentObject = {};
+    establishmentObject[establishment.name] = {};
+    establishmentObject[establishment.name]["avgPrice"] = "";
+    let sumOfProducts = 0;
 
-                        if(prodCateg === category.id){
-                            produtoCategoriaEPreco.push({ produto: product.name, categoria: category.name, preco: product.price});
-                            produtosEPrecos.push({ produto: product.name, preco: Number(product.price)})
-                            categoriasDoEstabelecimento.push(category.name);                                                
-                        }                       
-                    })   
-                }                   
-           })    
-        })     
-    })
-    categoriasDoEstabelecimento = [...new Set(categoriasDoEstabelecimento)] 
-     
-    produtosEPrecos = produtosEPrecos.filter(function (a) {
-        return !this[JSON.stringify(a)] && (this[JSON.stringify(a)] = true);
-    }, Object.create(null))
-    
-    produtosEPrecos.forEach(function(prodPreco, i){
-        somaDosPrecos += prodPreco.preco;
-    })
+    products.forEach( product => {
+        if(establishment.productsId.includes(product.id)){
+            sumOfProducts += Number(product.price/100);
+        }
+        categories.forEach( category => {
+            if(establishment.productsId.includes(product.id) && product.categoriesId.includes(category.id)){
+                if(!Object.keys(establishmentObject[establishment.name]).includes(category.name)){
+                    establishmentObject[establishment.name][category.name] = {}
+                }
+                establishmentObject[establishment.name][category.name][product.name] = { "price" : (product.price/100).toFixed(2) };
+            }     
+        })                
+    }) 
 
-    let avgPrice = ((somaDosPrecos / establishment.productsId.length)/100).toFixed(2);
-    objetoEstab[establishment.name]["avgPrice"] = avgPrice
-    medias.push(Number(avgPrice));
+    let calAvgPrice = (sumOfProducts/establishment.productsId.length).toFixed(2);
+    avgs.push(Number(calAvgPrice))
+    establishmentObject[establishment.name]["avgPrice"] = calAvgPrice;
+    establishmentsObjects.push(establishmentObject);
 
-    categoriasDoEstabelecimento.forEach(function(categEstab, i){
-        objetoEstab[establishment.name][categEstab] = {}
+})
 
-        produtoCategoriaEPreco.forEach(function(prodEstab, i){
-           if(prodEstab.categoria === categEstab){
-             objetoEstab[establishment.name][categEstab][prodEstab.produto] = {}
-             objetoEstab[establishment.name][categEstab][prodEstab.produto]["price"] = (prodEstab.preco/100).toFixed(2);
-           }
-        })
-    })
+avgs.sort(function(a, b){
+    return a - b;
+})
+avgs.reverse();
 
-    listaDeObjetos.push({objeto: objetoEstab, media: Number(avgPrice)});
-
-})    
-
-function sortfunction(a, b){
-    return (a - b) 
-}
-medias.sort(sortfunction);
-medias.reverse();
-
-medias.forEach(function(mediaEstab, i){
-    listaDeObjetos.forEach(function(estabObj, i){
-        if(mediaEstab === estabObj.media){
-            Object.assign(objPrincipal, estabObj.objeto);
+avgs.forEach( currentAvg => {
+    establishmentsObjects.forEach( function( establishmentData ){
+        var establishmentName = Object.keys(establishmentData);
+        if(currentAvg === Number(establishmentData[establishmentName[0]].avgPrice)){
+            outPutData = Object.assign(outPutData, establishmentData);
         }
     })
 })
 
-var dadoDeSaidaJson = JSON.stringify(objPrincipal, null, 3)
+outPutData = JSON.stringify(outPutData, null, 3);
 
-fs.writeFile('caseTecnico.json', dadoDeSaidaJson, (err) => {
-    if(err) throw err;
-    console.log("arquivo criado")
-});
+fs.writeFile("novoJson.json", outPutData, (erro)=>{
+    if(erro) throw erro;
+    console.log("Arquivo json gerado com sucesso!")
+})
