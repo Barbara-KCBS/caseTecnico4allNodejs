@@ -1,9 +1,9 @@
 const fs = require("fs");
 const {establishments, products, categories} = require("./data.json");
 
-var outPutData = {};
-var avgs = [];
-var establishmentsObjects = [];
+let outPutData = {};
+let avgs = [];
+let establishmentsObjects = [];
 
 establishments.forEach( establishment => {
     let establishmentObject = {};
@@ -18,7 +18,7 @@ establishments.forEach( establishment => {
         categories.forEach( category => {
             if(establishment.productsId.includes(product.id) && product.categoriesId.includes(category.id)){
                 if(!Object.keys(establishmentObject[establishment.name]).includes(category.name)){
-                    establishmentObject[establishment.name][category.name] = {}
+                    establishmentObject[establishment.name][category.name] = {};
                 }
                 establishmentObject[establishment.name][category.name][product.name] = { "price" : (product.price/100).toFixed(2) };
             }     
@@ -26,7 +26,7 @@ establishments.forEach( establishment => {
     }) 
 
     let calAvgPrice = (sumOfProducts/establishment.productsId.length).toFixed(2);
-    avgs.push(Number(calAvgPrice))
+    avgs.push(Number(calAvgPrice));
     establishmentObject[establishment.name]["avgPrice"] = calAvgPrice;
     establishmentsObjects.push(establishmentObject);
 
@@ -39,7 +39,7 @@ avgs.reverse();
 
 avgs.forEach( currentAvg => {
     establishmentsObjects.forEach( function( establishmentData ){
-        var establishmentName = Object.keys(establishmentData);
+        let establishmentName = Object.keys(establishmentData);
         if(currentAvg === Number(establishmentData[establishmentName[0]].avgPrice)){
             outPutData = Object.assign(outPutData, establishmentData);
         }
@@ -50,5 +50,5 @@ outPutData = JSON.stringify(outPutData, null, 3);
 
 fs.writeFile("novoJson.json", outPutData, (erro)=>{
     if(erro) throw erro;
-    console.log("Arquivo json gerado com sucesso!")
+    console.log("Arquivo json gerado com sucesso!");
 })
