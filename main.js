@@ -2,7 +2,6 @@ const fs = require("fs");
 const {establishments, products, categories} = require("./data.json");
 
 let outPutData = {};
-let avgs = [];
 let establishmentsObjects = [];
 
 establishments.forEach( establishment => {
@@ -22,15 +21,14 @@ establishments.forEach( establishment => {
                 }
                 establishmentObject[establishment.name][category.name][product.name] = { "price" : (product.price/100).toFixed(2) };
             }     
-        })                
-    }) 
+        });                
+    });
 
     let calAvgPrice = (sumOfProducts/establishment.productsId.length).toFixed(2);
-    avgs.push(Number(calAvgPrice));
     establishmentObject[establishment.name]["avgPrice"] = calAvgPrice;
     establishmentsObjects.push(establishmentObject);
 
-})
+});
 
 establishmentsObjects.sort(function(a, b){
     let chaveA = Object.keys(a)
@@ -39,7 +37,7 @@ establishmentsObjects.sort(function(a, b){
     if(a[chaveA].avgPrice < b[chaveB].avgPrice) return -1;
     if(a[chaveA].avgPrice  > b[chaveB].avgPrice) return 1;
     return 0;
-})
+});
 
 establishmentsObjects.reverse();
 
@@ -47,11 +45,11 @@ establishmentsObjects.forEach( function( establishmentData ){
 
     outPutData = Object.assign(outPutData, establishmentData);
   
-})
+});
 
 outPutData = JSON.stringify(outPutData, null, 3);
 
 fs.writeFile("novoJson.json", outPutData, (erro)=>{
     if(erro) throw erro;
     console.log("Arquivo json gerado com sucesso!");
-})
+});
