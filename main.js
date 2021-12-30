@@ -32,18 +32,21 @@ establishments.forEach( establishment => {
 
 })
 
-avgs.sort(function(a, b){
-    return a - b;
+establishmentsObjects.sort(function(a, b){
+    let chaveA = Object.keys(a)
+    let chaveB = Object.keys(b)
+   
+    if(a[chaveA].avgPrice < b[chaveB].avgPrice) return -1;
+    if(a[chaveA].avgPrice  > b[chaveB].avgPrice) return 1;
+    return 0;
 })
-avgs.reverse();
 
-avgs.forEach( currentAvg => {
-    establishmentsObjects.forEach( function( establishmentData ){
-        let establishmentName = Object.keys(establishmentData);
-        if(currentAvg === Number(establishmentData[establishmentName[0]].avgPrice)){
-            outPutData = Object.assign(outPutData, establishmentData);
-        }
-    })
+establishmentsObjects.reverse();
+
+establishmentsObjects.forEach( function( establishmentData ){
+
+    outPutData = Object.assign(outPutData, establishmentData);
+  
 })
 
 outPutData = JSON.stringify(outPutData, null, 3);
