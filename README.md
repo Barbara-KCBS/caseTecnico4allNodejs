@@ -50,9 +50,9 @@ Observe o JSON de exemplo a seguir:
 }
 
 Nele há 3 objetos principais:
--	Products
--	Categories
--	Establishments
+-Products
+-Categories
+-Establishments
 Eles são todos relacionados, products são uma lista de produtos, todo o produto é vendido em vários estabelecimentos e pode pertencer a mais de uma categoria. As categories são a lista de todas as categorias, estabelecimentos vendem produtos dentro dessas categorias. Já establishments são a lista de estabelecimentos, estes vendes diversos produtos dentro de suas categorias.
 Use os atributos com o final Id, para vincular dados, por exemplo, se um product tem o campo id: 2, e um establishment tem productId: 2, significa que aquele estabelecimento vende o produto de id 2.
 Seu trabalho é dado o JSON de entrada, gerar um JSON de saída que deve seguir o seguinte formato: 
