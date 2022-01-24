@@ -2,7 +2,7 @@
 Case técnico solicitado pela 4all, processo seletivo do programa Girls in Tech.
 Girls in Tech - Exercício
 
-Olá participante! 
+<pre>Olá participante! 
 Desenvolvemos um pequeno exercício para vermos a sua capacidade de resolução de problemas. Por isso, para o exercício a seguir, use a linguagem em que se sente mais confortável.
 
 Exercício
