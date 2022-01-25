@@ -120,5 +120,6 @@ Exemplo de JSON de saída:
 }
 
 Onde entregar o(s) exercícios:
-Faça o(s) projeto(s) ou github (ou semelhante) e nos envie o link para acessá-lo, ou nos envie ele(s) através de um zip.
+Faça o(s) projeto(s) ou github (ou semelhante) e nos envie o link para acessá-lo, 
+ou nos envie ele(s) através de um zip.
 
