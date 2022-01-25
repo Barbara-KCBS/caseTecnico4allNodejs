@@ -3,11 +3,12 @@ Case técnico solicitado pela 4all, processo seletivo do programa Girls in Tech.
 Girls in Tech - Exercício
 
 <pre>Olá participante! 
-Desenvolvemos um pequeno exercício para vermos a sua capacidade de resolução de problemas. Por isso, para o exercício a seguir, use a linguagem em que se sente mais confortável.
+Desenvolvemos um pequeno exercício para vermos a sua capacidade de resolução de problemas. Por isso, para o 
+exercício a seguir, use a linguagem em que se sente mais confortável.
 
 Exercício
-OBS: O exercício deve ser feito usando o data.json que será enviado via email, os JSON neste documento são apenas para exemplificação. Não altere este arquivo.
-Observe o JSON de exemplo a seguir:
+OBS: O exercício deve ser feito usando o data.json que será enviado via email, os JSON neste documento são 
+apenas para exemplificação. Não altere este arquivo. Observe o JSON de exemplo a seguir:
 {
   "products": [
     {
@@ -53,9 +54,15 @@ Nele há 3 objetos principais:
 -Products
 -Categories
 -Establishments
-Eles são todos relacionados, products são uma lista de produtos, todo o produto é vendido em vários estabelecimentos e pode pertencer a mais de uma categoria. As categories são a lista de todas as categorias, estabelecimentos vendem produtos dentro dessas categorias. Já establishments são a lista de estabelecimentos, estes vendes diversos produtos dentro de suas categorias.
-Use os atributos com o final Id, para vincular dados, por exemplo, se um product tem o campo id: 2, e um establishment tem productId: 2, significa que aquele estabelecimento vende o produto de id 2.
-Seu trabalho é dado o JSON de entrada, gerar um JSON de saída que deve seguir o seguinte formato: 
+
+Eles são todos relacionados, products são uma lista de produtos, todo o produto é vendido em vários 
+estabelecimentos e pode pertencer a mais de uma categoria. As categories são a lista de todas as categorias, 
+estabelecimentos vendem produtos dentro dessas categorias. Já establishments são a lista de estabelecimentos, 
+estes vendes diversos produtos dentro de suas categorias. Use os atributos com o final Id, para vincular dados, 
+por exemplo, se um product tem o campo id: 2, e um establishment tem productId: 2, significa que aquele 
+estabelecimento vende o produto de id 2. Seu trabalho é dado o JSON de entrada, gerar um JSON de saída que deve 
+seguir o seguinte formato: 
+
 {
   "establishment A": {
     "category A": {
@@ -78,13 +85,15 @@ Seu trabalho é dado o JSON de entrada, gerar um JSON de saída que deve seguir 
   }
 }
 
-Se notarem, o campo price teve seu valor original dividido por 100. É uma boa pratica nunca armazenar valores monetários quebrados, ao invés disso, o deixamos como um inteiro e no final transformamos ele para o valor final. Então, no JSON de saída, esse valor deve aparecer corretamente. A formula é:
+Se notarem, o campo price teve seu valor original dividido por 100. É uma boa pratica nunca armazenar valores 
+monetários quebrados, ao invés disso, o deixamos como um inteiro e no final transformamos ele para o valor final. 
+Então, no JSON de saída, esse valor deve aparecer corretamente. A formula é:
 price(data.json) / 100 = price(arquivo de saída)
 
 
 Exercício Extra
--	Calcule a média aritmética dos preços de um estabelecimento, e adicione ela ao JSON.
--	Ordene de forma decrescente, baseado no valor da média aritmética calculado no passo anterior.
+-Calcule a média aritmética dos preços de um estabelecimento, e adicione ela ao JSON.
+-Ordene de forma decrescente, baseado no valor da média aritmética calculado no passo anterior.
 Exemplo de JSON de saída:
 {
   "establishment B": {
